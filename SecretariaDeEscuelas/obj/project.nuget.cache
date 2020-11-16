@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "4CmfzmOeIaGaC7gm35y2IRoaMGWbVRc/VYv/GFZGoNJ3zC5xHU07tKRwdbgNbnFMgRpluKgU36I+T6fwPMKWmA==",
+  "dgSpecHash": "2OGq3D/UET08UQKCmA0EJF6xrD5yRaRQaWG03fAPlN+FD33ndmGOf11FTVWQrXUR6nN1Ky5EUMDs/snP7h0ndQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\natac\\source\\repos\\SecretariaDeEscuelas\\SecretariaDeEscuelas\\SecretariaDeEscuelas.csproj",
+  "projectFilePath": "C:\\Users\\natac\\OneDrive\\Documentos\\GitHub\\SecretariaDeEscuelas\\SecretariaDeEscuelas\\SecretariaDeEscuelas.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\natac\\.nuget\\packages\\microsoft.aspnet.webapi.client\\5.2.6\\microsoft.aspnet.webapi.client.5.2.6.nupkg.sha512",
     "C:\\Users\\natac\\.nuget\\packages\\microsoft.aspnetcore\\2.1.1\\microsoft.aspnetcore.2.1.1.nupkg.sha512",

@@ -37,7 +37,14 @@ namespace SecretariaDeEscuelas
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>()
+            services.AddDefaultIdentity<IdentityUser>(options => {
+                options.Password.RequiredLength = 8;
+                options.Password.RequireDigit = true;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireNonAlphanumeric = false;
+
+            })
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
