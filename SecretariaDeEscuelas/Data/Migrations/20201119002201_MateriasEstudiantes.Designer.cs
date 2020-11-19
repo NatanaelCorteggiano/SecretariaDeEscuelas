@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SecretariaDeEscuelas.Data;
 
 namespace SecretariaDeEscuelas.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201119002201_MateriasEstudiantes")]
+    partial class MateriasEstudiantes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -184,23 +186,6 @@ namespace SecretariaDeEscuelas.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("SecretariaDeEscuelas.Models.Calificacion", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("EstudianteId");
-
-                    b.Property<double>("Nota");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EstudianteId");
-
-                    b.ToTable("Calificaciones");
-                });
-
             modelBuilder.Entity("SecretariaDeEscuelas.Models.Carrera", b =>
                 {
                     b.Property<int>("Id")
@@ -298,11 +283,7 @@ namespace SecretariaDeEscuelas.Data.Migrations
 
                     b.Property<int>("EstudianteId");
 
-                    b.Property<int>("CalificacionId");
-
-                    b.HasKey("MateriaId", "EstudianteId", "CalificacionId");
-
-                    b.HasIndex("CalificacionId");
+                    b.HasKey("MateriaId", "EstudianteId");
 
                     b.HasIndex("EstudianteId");
 
@@ -354,14 +335,6 @@ namespace SecretariaDeEscuelas.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("SecretariaDeEscuelas.Models.Calificacion", b =>
-                {
-                    b.HasOne("SecretariaDeEscuelas.Models.Estudiante")
-                        .WithMany("Calificaciones")
-                        .HasForeignKey("EstudianteId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("SecretariaDeEscuelas.Models.Carrera", b =>
                 {
                     b.HasOne("SecretariaDeEscuelas.Models.Instituto", "Instituto")
@@ -393,11 +366,6 @@ namespace SecretariaDeEscuelas.Data.Migrations
 
             modelBuilder.Entity("SecretariaDeEscuelas.Models.MateriaEstudiante", b =>
                 {
-                    b.HasOne("SecretariaDeEscuelas.Models.Calificacion", "Calificacion")
-                        .WithMany()
-                        .HasForeignKey("CalificacionId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("SecretariaDeEscuelas.Models.Estudiante", "Estudiante")
                         .WithMany("MateriasEstudiantes")
                         .HasForeignKey("EstudianteId")

@@ -1,4 +1,4 @@
-IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
+﻿IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
 BEGIN
     CREATE TABLE [__EFMigrationsHistory] (
         [MigrationId] nvarchar(150) NOT NULL,
@@ -127,7 +127,6 @@ VALUES (N'00000000000000_CreateIdentitySchema', N'2.1.14-servicing-32113');
 
 GO
 
-
 CREATE TABLE [Institutos] (
     [Id] int NOT NULL IDENTITY,
     [Nombre] nvarchar(max) NULL,
@@ -140,7 +139,6 @@ INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
 VALUES (N'20201116203604_Institutos', N'2.1.14-servicing-32113');
 
 GO
-
 
 CREATE TABLE [Carreras] (
     [Id] int NOT NULL IDENTITY,
@@ -160,7 +158,6 @@ INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
 VALUES (N'20201116204843_Carreras', N'2.1.14-servicing-32113');
 
 GO
-
 
 DROP INDEX [IX_Carreras_InstitutoId] ON [Carreras];
 
@@ -197,8 +194,23 @@ VALUES (N'20201118180721_CarrerasMaterias', N'2.1.14-servicing-32113');
 
 GO
 
+ALTER TABLE [CarreraMateria] DROP CONSTRAINT [FK_CarreraMateria_Carreras_CarreraId];
 
-ALTER TABLE [Materias] ADD [MaestroId] int NOT NULL DEFAULT 0;
+GO
+
+ALTER TABLE [CarreraMateria] DROP CONSTRAINT [FK_CarreraMateria_Materias_MateriaId];
+
+GO
+
+ALTER TABLE [CarreraMateria] DROP CONSTRAINT [PK_CarreraMateria];
+
+GO
+
+EXEC sp_rename N'[CarreraMateria]', N'CarrerasMaterias';
+
+GO
+
+EXEC sp_rename N'[CarrerasMaterias].[IX_CarreraMateria_MateriaId]', N'IX_CarrerasMaterias_MateriaId', N'INDEX';
 
 GO
 
@@ -206,41 +218,11 @@ ALTER TABLE [CarrerasMaterias] ADD CONSTRAINT [PK_CarrerasMaterias] PRIMARY KEY 
 
 GO
 
-CREATE TABLE [Maestros] (
-    [Id] int NOT NULL IDENTITY,
-    [Nombre] nvarchar(max) NULL,
-    [Apellido] nvarchar(max) NULL,
-    CONSTRAINT [PK_Maestros] PRIMARY KEY ([Id])
-);
-
-GO
-
-CREATE INDEX [IX_Materias_MaestroId] ON [Materias] ([MaestroId]);
-
-GO
-
-ALTER TABLE [CarrerasMaterias] ADD CONSTRAINT [FK_CarrerasMaterias_Carreras_CarreraId] FOREIGN KEY ([CarreraId]) REFERENCES [Carreras] ([Id]) ON DELETE CASCADE;
-
-GO
-
-ALTER TABLE [CarrerasMaterias] ADD CONSTRAINT [FK_CarrerasMaterias_Materias_MateriaId] FOREIGN KEY ([MateriaId]) REFERENCES [Materias] ([Id]) ON DELETE CASCADE;
-
-GO
-
-ALTER TABLE [Materias] ADD CONSTRAINT [FK_Materias_Maestros_MaestroId] FOREIGN KEY ([MaestroId]) REFERENCES [Maestros] ([Id]) ON DELETE CASCADE;
-
-GO
-
-INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-VALUES (N'20201118194718_Maestros', N'2.1.14-servicing-32113');
-
-GO
-
-
 CREATE TABLE [Estudiantes] (
     [Id] int NOT NULL IDENTITY,
     [Nombre] nvarchar(max) NULL,
     [Apellido] nvarchar(max) NULL,
+    [CarreraId] int NOT NULL,
     CONSTRAINT [PK_Estudiantes] PRIMARY KEY ([Id])
 );
 
@@ -260,49 +242,16 @@ CREATE INDEX [IX_MateriasEstudiantes_EstudianteId] ON [MateriasEstudiantes] ([Es
 
 GO
 
-INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-VALUES (N'20201119002201_MateriasEstudiantes', N'2.1.14-servicing-32113');
+ALTER TABLE [CarrerasMaterias] ADD CONSTRAINT [FK_CarrerasMaterias_Carreras_CarreraId] FOREIGN KEY ([CarreraId]) REFERENCES [Carreras] ([Id]) ON DELETE CASCADE;
 
 GO
 
-
-ALTER TABLE [MateriasEstudiantes] DROP CONSTRAINT [PK_MateriasEstudiantes];
-
-GO
-
-ALTER TABLE [MateriasEstudiantes] ADD [CalificacionId] int NOT NULL DEFAULT 0;
-
-GO
-
-ALTER TABLE [MateriasEstudiantes] ADD CONSTRAINT [PK_MateriasEstudiantes] PRIMARY KEY ([MateriaId], [EstudianteId], [CalificacionId]);
-
-GO
-
-CREATE TABLE [Calificaciones] (
-    [Id] int NOT NULL IDENTITY,
-    [Nota] float NOT NULL,
-    [EstudianteId] int NOT NULL,
-    CONSTRAINT [PK_Calificaciones] PRIMARY KEY ([Id]),
-    CONSTRAINT [FK_Calificaciones_Estudiantes_EstudianteId] FOREIGN KEY ([EstudianteId]) REFERENCES [Estudiantes] ([Id]) ON DELETE CASCADE
-);
-
-GO
-
-CREATE INDEX [IX_MateriasEstudiantes_CalificacionId] ON [MateriasEstudiantes] ([CalificacionId]);
-
-GO
-
-CREATE INDEX [IX_Calificaciones_EstudianteId] ON [Calificaciones] ([EstudianteId]);
-
-GO
-
-ALTER TABLE [MateriasEstudiantes] ADD CONSTRAINT [FK_MateriasEstudiantes_Calificaciones_CalificacionId] FOREIGN KEY ([CalificacionId]) REFERENCES [Calificaciones] ([Id]) ON DELETE NO ACTION;
+ALTER TABLE [CarrerasMaterias] ADD CONSTRAINT [FK_CarrerasMaterias_Materias_MateriaId] FOREIGN KEY ([MateriaId]) REFERENCES [Materias] ([Id]) ON DELETE CASCADE;
 
 GO
 
 INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-VALUES (N'20201119175529_Calificaciones', N'2.1.14-servicing-32113');
+VALUES (N'20201118185319_MateriasEstudiantes', N'2.1.14-servicing-32113');
 
 GO
-
 

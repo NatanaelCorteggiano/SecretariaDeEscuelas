@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SecretariaDeEscuelas.Data;
 
 namespace SecretariaDeEscuelas.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201116204843_Carreras")]
+    partial class Carreras
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -184,23 +186,6 @@ namespace SecretariaDeEscuelas.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("SecretariaDeEscuelas.Models.Calificacion", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("EstudianteId");
-
-                    b.Property<double>("Nota");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EstudianteId");
-
-                    b.ToTable("Calificaciones");
-                });
-
             modelBuilder.Entity("SecretariaDeEscuelas.Models.Carrera", b =>
                 {
                     b.Property<int>("Id")
@@ -213,38 +198,9 @@ namespace SecretariaDeEscuelas.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("InstitutoId")
-                        .IsUnique();
+                    b.HasIndex("InstitutoId");
 
                     b.ToTable("Carreras");
-                });
-
-            modelBuilder.Entity("SecretariaDeEscuelas.Models.CarreraMateria", b =>
-                {
-                    b.Property<int>("CarreraId");
-
-                    b.Property<int>("MateriaId");
-
-                    b.HasKey("CarreraId", "MateriaId");
-
-                    b.HasIndex("MateriaId");
-
-                    b.ToTable("CarrerasMaterias");
-                });
-
-            modelBuilder.Entity("SecretariaDeEscuelas.Models.Estudiante", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Apellido");
-
-                    b.Property<string>("Nombre");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Estudiantes");
                 });
 
             modelBuilder.Entity("SecretariaDeEscuelas.Models.Instituto", b =>
@@ -258,55 +214,6 @@ namespace SecretariaDeEscuelas.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Institutos");
-                });
-
-            modelBuilder.Entity("SecretariaDeEscuelas.Models.Maestro", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Apellido");
-
-                    b.Property<string>("Nombre");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Maestros");
-                });
-
-            modelBuilder.Entity("SecretariaDeEscuelas.Models.Materia", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("MaestroId");
-
-                    b.Property<string>("Nombre");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MaestroId");
-
-                    b.ToTable("Materias");
-                });
-
-            modelBuilder.Entity("SecretariaDeEscuelas.Models.MateriaEstudiante", b =>
-                {
-                    b.Property<int>("MateriaId");
-
-                    b.Property<int>("EstudianteId");
-
-                    b.Property<int>("CalificacionId");
-
-                    b.HasKey("MateriaId", "EstudianteId", "CalificacionId");
-
-                    b.HasIndex("CalificacionId");
-
-                    b.HasIndex("EstudianteId");
-
-                    b.ToTable("MateriasEstudiantes");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -354,58 +261,11 @@ namespace SecretariaDeEscuelas.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("SecretariaDeEscuelas.Models.Calificacion", b =>
-                {
-                    b.HasOne("SecretariaDeEscuelas.Models.Estudiante")
-                        .WithMany("Calificaciones")
-                        .HasForeignKey("EstudianteId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("SecretariaDeEscuelas.Models.Carrera", b =>
                 {
                     b.HasOne("SecretariaDeEscuelas.Models.Instituto", "Instituto")
-                        .WithOne("Carrera")
-                        .HasForeignKey("SecretariaDeEscuelas.Models.Carrera", "InstitutoId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("SecretariaDeEscuelas.Models.CarreraMateria", b =>
-                {
-                    b.HasOne("SecretariaDeEscuelas.Models.Carrera", "Carrera")
                         .WithMany()
-                        .HasForeignKey("CarreraId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("SecretariaDeEscuelas.Models.Materia", "Materia")
-                        .WithMany("CarrerasMaterias")
-                        .HasForeignKey("MateriaId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("SecretariaDeEscuelas.Models.Materia", b =>
-                {
-                    b.HasOne("SecretariaDeEscuelas.Models.Maestro", "Maestro")
-                        .WithMany("Materias")
-                        .HasForeignKey("MaestroId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("SecretariaDeEscuelas.Models.MateriaEstudiante", b =>
-                {
-                    b.HasOne("SecretariaDeEscuelas.Models.Calificacion", "Calificacion")
-                        .WithMany()
-                        .HasForeignKey("CalificacionId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("SecretariaDeEscuelas.Models.Estudiante", "Estudiante")
-                        .WithMany("MateriasEstudiantes")
-                        .HasForeignKey("EstudianteId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("SecretariaDeEscuelas.Models.Materia", "Materia")
-                        .WithMany()
-                        .HasForeignKey("MateriaId")
+                        .HasForeignKey("InstitutoId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
