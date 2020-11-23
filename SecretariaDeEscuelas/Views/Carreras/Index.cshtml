@@ -1,0 +1,33 @@
+﻿@model IEnumerable<SecretariaDeEscuelas.Models.Carrera>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Institutos y Carreras</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Instituto)
+            </th>
+            <th>
+                Carrera
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Instituto.Nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nombre)
+            </td>            
+        </tr>
+}
+    </tbody>
+</table>
