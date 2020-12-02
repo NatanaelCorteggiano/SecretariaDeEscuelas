@@ -25,12 +25,14 @@ namespace SecretariaDeEscuelas.Controllers
             var applicationDbContext = _context.Carreras.Include(c => c.Instituto);
             return View(await applicationDbContext.ToListAsync());
         }
-
-        [HttpGet]
+        
+        
         public async Task<IActionResult> ListaCarreras()
-        {           
-            return Ok(await _context.Carreras.ToListAsync());
+        {
+            var applicationDbContext = _context.Carreras.Include(c => c.CarrerasMaterias).ThenInclude(x => x.Materia);
+            return Ok(await applicationDbContext.ToListAsync());
         }
+
         // GET: Carreras/Details/5
         public async Task<IActionResult> Details(int? id)
         {

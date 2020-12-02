@@ -26,12 +26,6 @@ namespace SecretariaDeEscuelas.Controllers
             return View(await applicationDbContext.ToListAsync());
         }
 
-        public JsonResult ObtenerMaterias(int maestro)
-        {
-            var materias = _context.Materias.ToList().Where(x => x.MaestroId == maestro);
-            return Json(new SelectList(materias, "Id", "Nombre"));
-        }
-
         // GET: Materias/Details/5
         public async Task<IActionResult> Details(int? id)
         {

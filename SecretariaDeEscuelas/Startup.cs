@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using SecretariaDeEscuelas.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 
 namespace SecretariaDeEscuelas
 {
@@ -32,6 +33,10 @@ namespace SecretariaDeEscuelas
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
+
+            services.AddMvc().AddJsonOptions(options => {
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             });
 
             services.AddDbContext<ApplicationDbContext>(options =>

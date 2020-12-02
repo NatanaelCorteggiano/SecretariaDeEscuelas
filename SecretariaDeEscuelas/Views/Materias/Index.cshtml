@@ -4,68 +4,28 @@
     ViewData["Title"] = "Index";
 }
 
-<h2 style="text-align:center">Carreras</h2>
-<div class="btn-group" style="display:flex; justify-content:center">
-    <button type="button" class="btn btn-success">Músico Profesional</button>
-    <button type="button" class="btn btn-success">Productor de Música</button>
-    <button type="button" class="btn btn-success">Analista de Sistemas</button>
-    <button type="button" class="btn btn-success">Abogacía</button>
-    <button type="button" class="btn btn-success">Medicina</button>
-</div>
-<div class="form-group">
-    <label class="control-label">Seleccione una carrera</label>
-    <select id="musicoProfesional" class="form-control"></select>
-</div>
-
-<table>
-    <tr>
-        <td id="materiaMaestro">
-
-        </td>
-    </tr>
-    
-</table>
-
-
-<br />
-<br />
-<table class="table table-bordered table-hover" style="text-align:center">
+<table class="table table-bordered" style="text-align:center">
     <thead>
         <tr class="bg-danger">
             <th style="text-align:center">
-                Materia
+                Carrera
             </th>
             <th style="text-align:center">
-                @Html.DisplayNameFor(model => model.Maestro)
+                Materia
             </th>
-            <!--<th style="text-align:center">
-            Estudiante
-            </th>-->
-            <th></th>
+            
         </tr>
     </thead>
     
-    <!-- <tbody>
-             @foreach (var item in Model)
-             {
-             <tr class="bg-info">
-                 <td>
-                     @Html.DisplayFor(modelItem => item.Nombre)
-                 </td>
-                 <td>
-                     @Html.DisplayFor(modelItem => item.Maestro.Nombre)
-                     @Html.DisplayFor(modelItem => item.Maestro.Apellido)
-                 </td>
-                 <td id="hola">
-                 </td>
-        <td>
-            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-            <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-        </td>
+    <tbody>
+        <tr class="bg-info">
+            <td id="carreras">
+            </td>
+            <td id="materias">                
+            </td>            
         </tr>
-    }
-        </tbody>-->
+    
+        </tbody>
 </table>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
@@ -78,36 +38,30 @@
             data: "{}",
             success: function (carrera) {
 
-                var s = '<option value = "-1"> Seleccione una carrera</option>';
+     /*           var s = '<td value = "-1"></td>';
                 for (var i = 0; i < carrera.length; i++) {
-                    s += '<option value="' + carrera[i].id + '">' + carrera[i].nombre + '</option>';
+                    s += '<td>' + carrera[i].nombre + carrera[i].carrerasMaterias + '</td>';
                 }
-                $("#musicoProfesional").html(s);
-                console.log(carrera);
+                $("#carreras").html(s);
+                console.log(carrera);*/
+
+                var s;
+                var p;
+                for (var i = 0; i < carrera.length; i++) {
+                    for (var j = 0; j < carrera[i].carrerasMaterias.length; j++) {
+                        var materia = carrera[i].carrerasMaterias[j].materia;
+                        
+                        s += '<tr><td>' + carrera[i].nombre + '</td></tr>';
+                        p += '<tr><td>' + materia.nombre + '<button>'+ "Opciones" + '</button> ' + '</td></tr>';
+                        console.log(materia.nombre);
+
+                        $("#carreras").html(s);
+                        $("#materias").html(p);
+                    }
+                    
+                }
             }
         });
-
-
-        $("#musicoProfesional").change(function () {
-            $("#materiaMaestro").empty();
-                $.ajax({
-                    type: 'POST',
-                    url: '@Url.Action("ObtenerMaterias", "Materias")',
-                    dataType: 'json',
-                    data: { pais: $("#musicoProfesional").val() },
-
-                    success: function (materias) {
-                        console.log(materias);
-                        $.each(materias, function (i, materia) {
-                            $("#materiaMaestro").append(
-                                '<td value="' + materia.value + '">' + materia.text + '</td>');
-                        });
-                    },
-
-                    error: function (ex) {
-                        alert('Error al obtener las provincias');
-                    }
-                });
-            })
     });
+
 </script>

@@ -11,5 +11,6 @@ namespace SecretariaDeEscuelas.Models
         public string Nombre { get; set; }
         public int InstitutoId { get; set; }
         public Instituto Instituto { get; set; }
+        public List<CarreraMateria> CarrerasMaterias { get; set; }
     }
 }
