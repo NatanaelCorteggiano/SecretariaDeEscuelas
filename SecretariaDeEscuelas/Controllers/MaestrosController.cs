@@ -10,29 +10,35 @@ using SecretariaDeEscuelas.Models;
 
 namespace SecretariaDeEscuelas.Controllers
 {
-    public class EstudiantesController : Controller
+    public class MaestrosController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public EstudiantesController(ApplicationDbContext context)
+        public MaestrosController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Estudiantes
+        // GET: Maestros
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Estudiantes.ToListAsync());
+            return View(await _context.Maestros.ToListAsync());
         }
-
 
         [HttpGet]
-        public IActionResult Estudiantes(int id)
+        public async Task<IActionResult> ListaMaestros()
         {
-            var estudiante = _context.MateriasEstudiantes.Include(x => x.Estudiante).Where(x => x.MateriaId == id).Select(x => x.Estudiante).ToList();
-            return Ok(estudiante);
+            return Ok(await _context.Maestros.ToListAsync());
         }
-        // GET: Estudiantes/Details/5
+
+        [HttpGet]
+        public IActionResult Maestros(int id)
+        {
+            var maestro = _context.Materias.Include(x => x.Maestro).FirstOrDefault(x => x.Id == id).Maestro;                
+            return Ok(maestro);
+        }
+
+        // GET: Maestros/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -40,39 +46,39 @@ namespace SecretariaDeEscuelas.Controllers
                 return NotFound();
             }
 
-            var estudiante = await _context.Estudiantes
+            var maestro = await _context.Maestros
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (estudiante == null)
+            if (maestro == null)
             {
                 return NotFound();
             }
 
-            return View(estudiante);
+            return View(maestro);
         }
 
-        // GET: Estudiantes/Create
+        // GET: Maestros/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Estudiantes/Create
+        // POST: Maestros/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nombre,Apellido")] Estudiante estudiante)
+        public async Task<IActionResult> Create([Bind("Id,Nombre,Apellido")] Maestro maestro)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(estudiante);
+                _context.Add(maestro);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(estudiante);
+            return View(maestro);
         }
 
-        // GET: Estudiantes/Edit/5
+        // GET: Maestros/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -80,22 +86,22 @@ namespace SecretariaDeEscuelas.Controllers
                 return NotFound();
             }
 
-            var estudiante = await _context.Estudiantes.FindAsync(id);
-            if (estudiante == null)
+            var maestro = await _context.Maestros.FindAsync(id);
+            if (maestro == null)
             {
                 return NotFound();
             }
-            return View(estudiante);
+            return View(maestro);
         }
 
-        // POST: Estudiantes/Edit/5
+        // POST: Maestros/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Apellido")] Estudiante estudiante)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Apellido")] Maestro maestro)
         {
-            if (id != estudiante.Id)
+            if (id != maestro.Id)
             {
                 return NotFound();
             }
@@ -104,12 +110,12 @@ namespace SecretariaDeEscuelas.Controllers
             {
                 try
                 {
-                    _context.Update(estudiante);
+                    _context.Update(maestro);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!EstudianteExists(estudiante.Id))
+                    if (!MaestroExists(maestro.Id))
                     {
                         return NotFound();
                     }
@@ -120,10 +126,10 @@ namespace SecretariaDeEscuelas.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(estudiante);
+            return View(maestro);
         }
 
-        // GET: Estudiantes/Delete/5
+        // GET: Maestros/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -131,30 +137,30 @@ namespace SecretariaDeEscuelas.Controllers
                 return NotFound();
             }
 
-            var estudiante = await _context.Estudiantes
+            var maestro = await _context.Maestros
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (estudiante == null)
+            if (maestro == null)
             {
                 return NotFound();
             }
 
-            return View(estudiante);
+            return View(maestro);
         }
 
-        // POST: Estudiantes/Delete/5
+        // POST: Maestros/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var estudiante = await _context.Estudiantes.FindAsync(id);
-            _context.Estudiantes.Remove(estudiante);
+            var maestro = await _context.Maestros.FindAsync(id);
+            _context.Maestros.Remove(maestro);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool EstudianteExists(int id)
+        private bool MaestroExists(int id)
         {
-            return _context.Estudiantes.Any(e => e.Id == id);
+            return _context.Maestros.Any(e => e.Id == id);
         }
     }
 }

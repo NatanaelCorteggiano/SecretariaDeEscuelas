@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<table class="table table-bordered" style="text-align:center">
+<table class="table table-bordered">
     <thead>
         <tr class="bg-danger">
             <th style="text-align:center">
@@ -13,55 +13,141 @@
             <th style="text-align:center">
                 Materia
             </th>
-            
+            <th style="text-align:center">
+                Opciones
+            </th>
+
         </tr>
     </thead>
-    
-    <tbody>
+
+    <tbody style="font-size:17px;">
         <tr class="bg-info">
             <td id="carreras">
             </td>
-            <td id="materias">                
-            </td>            
+            <td id="materias">
+            </td>
+
+            <td id="opciones">
+            </td>
         </tr>
-    
-        </tbody>
+
+    </tbody>
 </table>
+
+<div class="modal fade" id="modalMaestros" tabindex="-1" role="dialog" aria - labelledby="exampleModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="exampleModalLabel">Maestros</h4>                
+            </div>
+            <div class="modal-body">
+                <h4 style="text-align:center; text-decoration:underline"> Nombre y Apellido: </h4>
+                <p id="maestros" style="text-align:center"> </p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalEstudiantes" tabindex="-1" role="dialog" aria - labelledby="exampleModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="exampleModalLabel">Estudiantes</h4>                
+            </div>
+            <div class="modal-body">
+                <h4 style="text-align:center; text-decoration:underline"> Nombre y Apellido: </h4>
+                <p id="estudiantes" style="text-align:center"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
 
 <script>
 
     $(document).ready(function () {
+
+
+
         $.ajax({
             url: '@Url.Action("ListaCarreras","Carreras")',
             data: "{}",
             success: function (carrera) {
-
-     /*           var s = '<td value = "-1"></td>';
-                for (var i = 0; i < carrera.length; i++) {
-                    s += '<td>' + carrera[i].nombre + carrera[i].carrerasMaterias + '</td>';
-                }
-                $("#carreras").html(s);
-                console.log(carrera);*/
-
-                var s;
-                var p;
+                var carreras;
+                var materias;
+                var opciones;
                 for (var i = 0; i < carrera.length; i++) {
                     for (var j = 0; j < carrera[i].carrerasMaterias.length; j++) {
                         var materia = carrera[i].carrerasMaterias[j].materia;
-                        
-                        s += '<tr><td>' + carrera[i].nombre + '</td></tr>';
-                        p += '<tr><td>' + materia.nombre + '<button>'+ "Opciones" + '</button> ' + '</td></tr>';
-                        console.log(materia.nombre);
+                        var materiaId = carrera[i].carrerasMaterias[j].materiaId;
 
-                        $("#carreras").html(s);
-                        $("#materias").html(p);
+                        carreras += '<tr style="display: flex; justify-content: center;"><td>' + carrera[i].nombre + '</td></tr>';
+                        materias += '<tr style="display: flex; justify-content: center;"><td>' + materia.nombre + '</td></tr>';
+                        opciones += '<tr style="display: flex; justify-content: center;"><td> <div class="dropdown"><button  class="btn btn-default btn-xs dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >   Opciones <span class="caret"></span> </button>'
+                            + '<div class="dropdown-menu">'
+                            + '<button onclick="test(' + materiaId + ')" class="dropdown-item btn btn-link" data-toggle="modal" data-target="#modalMaestros">Maestros</button>'
+                            + '<button onclick="test2(' + materiaId + ')" class="dropdown-item btn btn-link" data-toggle="modal" data-target="#modalEstudiantes">Estudiantes</button>'
+                            + '</div></div></td></tr>';
+                        console.log(materia.nombre);
+                        console.log(carrera[i].carrerasMaterias[j].materiaId);
+                        $("#carreras").html(carreras);
+                        $("#materias").html(materias);
+                        $("#opciones").html(opciones);
                     }
-                    
+
                 }
             }
         });
+
     });
+
+    function test(id) {
+        console.log(id);
+
+        var data = { id: id }
+            $.ajax({
+                url: '@Url.Action("Maestros", "Maestros")',
+                data: data,
+                contentType: 'application/x-www-form-urlencoded',
+                success: function (maestro) {
+                    console.log(maestro);
+                    if (maestro) {
+                        $("#maestros").html(maestro.nombre + " " + maestro.apellido);
+                    }
+                    else {
+                        console.log("Error")
+                    }
+                }
+            });
+    }
+
+    function test2(id) {
+        console.log(id);
+
+        var data = { id: id }
+            $.ajax({
+                url: '@Url.Action("Estudiantes", "Estudiantes")',
+                data: data,
+                contentType: 'application/x-www-form-urlencoded',
+                success: function (estudiante) {
+                    console.log(estudiante);
+                    var Estudiantes = "";
+                    for (var i = 0; i < estudiante.length; i++) {
+                        Estudiantes += '<p>' + estudiante[i].nombre + " " + estudiante[i].apellido + '</p>';                        
+                    }
+                    $("#estudiantes").html(Estudiantes);
+                }
+            });
+        }
 
 </script>
